@@ -9,34 +9,12 @@ let mlogTextEditor = new MlogTextEditor(canvasManager, 18,getTheme(),getKeys());
 
 
 let mlog = `
-
-# this is my comment
-
-#this is my comment
-
-.label myLabel1
-
-jump myLabel1 always
-
-myLabel2:
-jump myLabel2 always
-
-se a c a
-d 
-asda
-s d
-as
-d as afksdoifasdo fkads
-f dsaf
- asdkfosadkf 
- d 
- asda
- s d
- as
- d as afksdoifasdo fkads
- f dsaf
-  asdkfosadkf 
-
+# If you find any bugs, dm "b1zl" on discord.
+# Tab: Autofill | Enter: New line | Delete: Delete word | Arrow keys: Move Cursor |
+# PageUp: Prev Page| PageDown: Next Page |
+# Ctrl+h, Ctrl+j, Ctrl+k: Goto Top, Goto Middle, Goto Bottom
+# Ctrl+x, Ctrl+c, Ctrl+v: Cut, Copy, Paste Current Word.
+# Ctrl+-, Ctrl+=: Zoom Out, Zoom In 
 `
 function loadEditor() {
   setupOptions();

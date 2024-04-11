@@ -2,6 +2,7 @@ import { mlogTextEditor } from "./main.js";
 
 let importBtn = document.getElementById("import-clipboard-btn");
 let exportBtn = document.getElementById("export-clipboard-btn");
+let clearBtn = document.getElementById("clear-btn");
 
 function onImport() {
   console.log("IMPORT: WAITING...");
@@ -31,7 +32,14 @@ ${str}`);
   } else console.log("EXPORT: DENIED");
 
 }
+function onClear() {
+  let userPermission = confirm(`Clear?`);
+  if(!userPermission)return;
+  mlogTextEditor.loadMlog('[function]')
+  mlogTextEditor.init()
+}
 export function setupOptions() {
   importBtn.addEventListener("click", onImport);
   exportBtn.addEventListener("click", onExport);
+  clearBtn.addEventListener("click", onClear);
 }
