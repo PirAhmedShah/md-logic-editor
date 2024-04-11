@@ -21,12 +21,10 @@ this.canvas.w = this.canvas.width;
     
   }
 
-  initCanvas() {
-    console.log(" > > > > Loading Canvas...");
+  init() {
     window.addEventListener("resize", ()=>{
       this.resize();
     });
     this.resize();
-    console.log(" > > > > Canvas Loaded!");
   }
 }

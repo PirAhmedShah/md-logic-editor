@@ -85,19 +85,7 @@ const database = {
     "incite",
     "emanate",
   ],
-  liquid: [
-    "water",
-    "slag",
-    "oil",
-    "cryofluid",
-    "neoplasm",
-    "hydrogen",
-    "ozone",
-    "cyanogen",
-    "gallium",
-    "nitrogen",
-    "arkycite",
-  ],
+  liquid: ["water", "slag", "oil", "cryofluid", "neoplasm", "hydrogen", "ozone", "cyanogen", "gallium", "nitrogen", "arkycite"],
   block: [
     "graphite-press",
     "multi-press",
@@ -235,56 +223,48 @@ const database = {
   ],
 };
 
-
 const logicGroups = {
   getLogicGroupColor: (textBlock) => {
-    for (let i = 0; i < logicGroups.list.length; i++) {
-      let groupName = logicGroups.list[i];
-      if (logicGroups[groupName].keywords.includes(textBlock))
-        return logicGroups[groupName].color;
-    }
-    return "#ffffff";
+    let color = logicGroups.groupColors[logicGroups.keywordGroup[textBlock]];
+    return color ? color : "#ffffff";
   },
-  list: ["IO", "BlockControl", "Operations", "FlowControl", "UnitControl"],
-  
-  IO: {
-    keywords: ["read", "write", "print", "draw"],
-    color: "lightOrange",
-  },
-  BlockControl: {
-    keywords: [
-      "drawflush",
-      "printflush",
-      "control",
-      "sensor",
-      "radar",
-      "getlink",
-    ],
-    color: "red",
-  },
-  Operations: {
-    keywords: ["set", "op", "lookup", "packcolor"],
-    color: "purple",
-  },
-  FlowControl: {
-    keywords: ["jump", "wait", "stop", "end"],
-    color: "blue",
-  },
-
-  UnitControl: {
-    keywords: ["ubind", "ucontrol", "uradar", "ulocate"],
-    color: "yellow",
+  groupColors: { IO: "lightOrange", BlockControl: "red", Operations: "purple", FlowControl: "blue", UnitControl: "yellow", Commands: "lightOrange" },
+  keywordGroup: {
+    read: "IO",
+    write: "IO",
+    print: "IO",
+    draw: "IO",
+    drawflush: "BlockControl",
+    printflush: "BlockControl",
+    control: "BlockControl",
+    sensor: "BlockControl",
+    radar: "BlockControl",
+    getlink: "BlockControl",
+    set: "Operations",
+    op: "Operations",
+    lookup: "Operations",
+    packcolor: "Operations",
+    jump: "FlowControl",
+    wait: "FlowControl",
+    stop: "FlowControl",
+    end: "FlowControl",
+    ubind: "UnitControl",
+    ucontrol: "UnitControl",
+    uradar: "UnitControl",
+    ulocate: "UnitControl",
+    ".label": "Commands",
+    ".addlink": "Commands",
   },
 };
 //variables existing_vars, existing_user_var , existing_label,  [string], [label ], [variable], [number], [color], linked_buildings
 
 //existing_user_var means existing variables that are not in readOnlyVarNames.
 const suggestions = {
-  buildngs: ["linked_buildings","existing_user_var"],
-  logicNames: Array.from(new Set(database.block.map(str => str.split('-').pop()))),
-  commands: [".addlink",".label"],
+  buildngs: ["linked_buildings", "existing_user_var"],
+  logicNames: Array.from(new Set(database.block.map((str) => str.split("-").pop()))),
+  commands: [".addlink", ".label"],
   keywordWithOptions: ["jump", "draw", "control", "op", "ucontrol"],
-  specialKeywords:["[number]","[variable]","[color]","[label]"],
+  specialKeywords: ["[number]", "[variable]", "[color]", "[label]"],
   readOnlyVarNames: [
     "@tick",
     "@time",
@@ -298,7 +278,8 @@ const suggestions = {
     "@waveNumber", //ADD ALL BELOW TO DATABASE
     "@waveTime",
     "@second",
-    "@minute"],
+    "@minute",
+  ],
   keywordWithOptionsAutoFill: {
     jump: "[operator]",
     draw: "[type]",
@@ -306,50 +287,20 @@ const suggestions = {
     op: "[operator]",
     ucontrol: "[action]",
   },
-  state: ["true", "false", "1", "0","existing_vars"],
-  numbers: ["[number]","existing_vars"],
-  constant: ["[number]","existing_vars","true","false"],
-  allVars: ["existing_vars","linked_buildingss"],
-  all: ["[number]","existing_vars","true","false","linked_buildingss"],
-  variable: ["existing_vars","[variable]"],
+  state: ["true", "false", "1", "0", "existing_vars"],
+  numbers: ["[number]", "existing_vars"],
+  constant: ["[number]", "existing_vars", "true", "false"],
+  allVars: ["existing_vars", "linked_buildingss"],
+  all: ["[number]", "existing_vars", "true", "false", "linked_buildingss"],
+  variable: ["existing_vars", "[variable]"],
   lookupOptions: ["item", "liquid", "block", "unit"],
 
-  radarTargetOptions: [
-    "any",
-    "enemy",
-    "player",
-    "ally",
-    "ground",
-    "flying",
-    "attacker",
-    "boss",
-  ],
+  radarTargetOptions: ["any", "enemy", "player", "ally", "ground", "flying", "attacker", "boss"],
   radarSortOptions: ["distance", "health", "shield", "armor", "maxHealth"],
-  drawOptions: [
-    "clear",
-    "color",
-    "col",
-    "line",
-    "stroke",
-    "rect",
-    "lineRect",
-    "poly",
-    "linePoly",
-    "triangle",
-    "image",
-  ],
+  drawOptions: ["clear", "color", "col", "line", "stroke", "rect", "lineRect", "poly", "linePoly", "triangle", "image"],
   controlOptions: ["enabled", "shoot", "shootp", "config", "color"],
   ulocateFindOptions: ["ore", "building", "spawn", "damaged"],
-  ulocateGroups: [
-    "core",
-    "storage",
-    "generator",
-    "turret",
-    "factory",
-    "repair",
-    "battery",
-    "reactor",
-  ],
+  ulocateGroups: ["core", "storage", "generator", "turret", "factory", "repair", "battery", "reactor"],
   uControlOptions: [
     "move",
     "idle",
@@ -371,15 +322,7 @@ const suggestions = {
     "pathfind",
     "getBlock",
   ],
-  jumpOperators: [
-    "equal",
-    "notEqual",
-    "always",
-    "lessThan",
-    "greaterThan",
-    "lessThanEq",
-    "greaterThanEq",
-  ],
+  jumpOperators: ["equal", "notEqual", "always", "lessThan", "greaterThan", "lessThanEq", "greaterThanEq"],
   operators: [
     "add",
     "sub",
@@ -477,12 +420,7 @@ const suggestions = {
   blockNames: [...database.block].map((str) => "@" + str),
   liquidNames: [...database.liquid].map((str) => "@" + str),
 };
-suggestions.allNames = [
-  ...suggestions.unitNames,
-  ...suggestions.itemNames,
-  ...suggestions.blockNames,
-  ...suggestions.liquidNames,
-];
+suggestions.allNames = [...suggestions.unitNames, ...suggestions.itemNames, ...suggestions.blockNames, ...suggestions.liquidNames];
 
 const autoSuggest = {
   read: ["[result]", "[from]", "[at]"],
@@ -516,15 +454,7 @@ const autoSuggest = {
     config: ["[building]", "[to]"],
     color: ["[illuminator]", "[color]"],
   },
-  radar: [
-    "[target]",
-    "[and]",
-    "[and]",
-    "[sort]",
-    "[building]",
-    "[order]",
-    "[result]",
-  ],
+  radar: ["[target]", "[and]", "[and]", "[sort]", "[building]", "[order]", "[result]"],
   sensor: ["[result]", "[building]", "[@property]"],
   set: ["[result]", "[value]"],
   op: {
@@ -570,13 +500,7 @@ const autoSuggest = {
     atan: ["[result]", "[operand]"],
   },
   lookup: ["[type]", "[result]", "[id]"],
-  packcolor: [
-    "[result]",
-    "[redPercent]",
-    "[greenPercent]",
-    "[bluePercent]",
-    "[alphaPercent]",
-  ],
+  packcolor: ["[result]", "[redPercent]", "[greenPercent]", "[bluePercent]", "[alphaPercent]"],
   wait: ["[seconds]"],
   stop: [],
   end: [],
@@ -611,25 +535,8 @@ const autoSuggest = {
     pathfind: ["[x]", "[y]"],
     getBlock: ["[x]", "[y]", "[type]", "[building]", "[floor]"],
   },
-  uradar: [
-    "[target]",
-    "[and]",
-    "[and]",
-    "[sort]",
-    "[0]",
-    "[order]",
-    "[result]",
-  ],
-  ulocate: [
-    "[find]",
-    "[group]",
-    "[enemy]",
-    "[@ore]",
-    "[x]",
-    "[y]",
-    "[found]",
-    "[building]",
-  ],
+  uradar: ["[target]", "[and]", "[and]", "[sort]", "[0]", "[order]", "[result]"],
+  ulocate: ["[find]", "[group]", "[enemy]", "[@ore]", "[x]", "[y]", "[found]", "[building]"],
 };
 
 const parameters = {
@@ -661,9 +568,9 @@ const parameters = {
     "#",
   ],
   1: {
-    ".addlink":[[...suggestions.logicNames]],
-    ".label":[["[label]"]],
-    "#":[[""]],
+    ".addlink": [[...suggestions.logicNames]],
+    ".label": [["[label]"]],
+    "#": [[""]],
     read: [["[variable]"], suggestions.buildngs, suggestions.numbers],
     write: [["existing_user_var"], suggestions.buildngs, suggestions.numbers],
     draw: [
@@ -679,11 +586,7 @@ const parameters = {
         poly: addToArray(suggestions.numbers, 5),
         linePoly: addToArray(suggestions.numbers, 5),
         triangle: addToArray(suggestions.numbers, 6),
-        image: addToArray(suggestions.numbers, 2, [
-          suggestions.numbers,
-          suggestions.numbers,
-          suggestions.allNames,
-        ]),
+        image: addToArray(suggestions.numbers, 2, [suggestions.numbers, suggestions.numbers, suggestions.allNames]),
       },
     ],
     print: [["existing_vars"]],
@@ -694,30 +597,15 @@ const parameters = {
       suggestions.controlOptions,
       {
         enabled: [suggestions.buildngs, suggestions.state],
-        shoot: [
-          suggestions.buildngs,
-          suggestions.numbers,
-          suggestions.numbers,
-          suggestions.state,
-        ],
+        shoot: [suggestions.buildngs, suggestions.numbers, suggestions.numbers, suggestions.state],
         shootp: [suggestions.buildngs, ["existing_vars"], suggestions.state],
         config: [suggestions.buildngs, suggestions.itemNames],
         color: [suggestions.buildngs, ["[color]"]],
       },
     ],
-    radar: [
-      ...addToArray(suggestions.radarTargetOptions, 3),
-      suggestions.radarSortOptions,
-      suggestions.buildngs,
-      ["0", "1"],
-      ["[variable]"],
-    ],
-    sensor: [
-      ["[variable]"],
-      suggestions.buildngs,
-      [...suggestions.itemNames,...suggestions.liquidNames, ...suggestions.otherSensableProperties],
-    ],
-    set: [suggestions.variable,suggestions.constant],
+    radar: [...addToArray(suggestions.radarTargetOptions, 3), suggestions.radarSortOptions, suggestions.buildngs, ["0", "1"], ["[variable]"]],
+    sensor: [["[variable]"], suggestions.buildngs, [...suggestions.itemNames, ...suggestions.liquidNames, ...suggestions.otherSensableProperties]],
+    set: [suggestions.variable, suggestions.constant],
     op: [
       suggestions.operators,
       {
@@ -729,37 +617,13 @@ const parameters = {
         mod: [suggestions.variable, suggestions.constant, suggestions.constant],
         pow: [suggestions.variable, suggestions.constant, suggestions.constant],
         equal: [suggestions.variable, suggestions.constant, suggestions.constant],
-        notEqual: [
-          suggestions.variable,
-          suggestions.constant,
-          suggestions.constant,
-        ],
+        notEqual: [suggestions.variable, suggestions.constant, suggestions.constant],
         land: [suggestions.variable, suggestions.constant, suggestions.constant],
-        lessThan: [
-          suggestions.variable,
-          suggestions.constant,
-          suggestions.constant,
-        ],
-        lessThanEq: [
-          suggestions.variable,
-          suggestions.constant,
-          suggestions.constant,
-        ],
-        greaterThan: [
-          suggestions.variable,
-          suggestions.constant,
-          suggestions.constant,
-        ],
-        greaterThanEq: [
-          suggestions.variable,
-          suggestions.constant,
-          suggestions.constant,
-        ],
-        strictEqual: [
-          suggestions.variable,
-          suggestions.constant,
-          suggestions.constant,
-        ],
+        lessThan: [suggestions.variable, suggestions.constant, suggestions.constant],
+        lessThanEq: [suggestions.variable, suggestions.constant, suggestions.constant],
+        greaterThan: [suggestions.variable, suggestions.constant, suggestions.constant],
+        greaterThanEq: [suggestions.variable, suggestions.constant, suggestions.constant],
+        strictEqual: [suggestions.variable, suggestions.constant, suggestions.constant],
         shl: [suggestions.variable, suggestions.constant, suggestions.constant],
         shr: [suggestions.variable, suggestions.constant, suggestions.constant],
         or: [suggestions.variable, suggestions.constant, suggestions.constant],
@@ -769,11 +633,7 @@ const parameters = {
         max: [suggestions.variable, suggestions.constant, suggestions.constant],
         min: [suggestions.variable, suggestions.constant, suggestions.constant],
         angle: [suggestions.variable, suggestions.constant, suggestions.constant],
-        angleDiff: [
-          suggestions.variable,
-          suggestions.constant,
-          suggestions.constant,
-        ],
+        angleDiff: [suggestions.variable, suggestions.constant, suggestions.constant],
         len: [suggestions.variable, suggestions.constant, suggestions.constant],
         noise: [suggestions.variable, suggestions.constant, suggestions.constant],
         abs: [suggestions.variable, suggestions.constant],
@@ -798,7 +658,7 @@ const parameters = {
     stop: [],
     end: [],
     jump: [
-      ["existing_label","[number]"],
+      ["existing_label", "[number]"],
       suggestions.jumpOperators,
       {
         equal: [suggestions.allVars, suggestions.all],
@@ -811,7 +671,7 @@ const parameters = {
       },
     ],
 
-    ubind: [[...suggestions.unitNames,"existing_user_var"]],
+    ubind: [[...suggestions.unitNames, "existing_user_var"]],
     ucontrol: [
       suggestions.uControlOptions,
       {
@@ -826,33 +686,17 @@ const parameters = {
         payEnter: [],
         payDrop: [],
         payTake: [suggestions.state],
-        itemTake: [
-          suggestions.buildngs,
-          suggestions.itemNames,
-          suggestions.numbers,
-        ],
+        itemTake: [suggestions.buildngs, suggestions.itemNames, suggestions.numbers],
         itemDrop: [suggestions.buildngs, suggestions.numbers],
         boost: [suggestions.state],
         target: [suggestions.numbers, suggestions.numbers, suggestions.state],
         targetp: [["existing_vars"], suggestions.state],
         autoPathfind: [],
         pathfind: [suggestions.numbers, suggestions.numbers],
-        getBlock: [
-          suggestions.numbers,
-          suggestions.numbers,
-          ["[variable]"],
-          ["[variable]"],
-          ["[variable]"],
-        ],
+        getBlock: [suggestions.numbers, suggestions.numbers, ["[variable]"], ["[variable]"], ["[variable]"]],
       },
     ],
-    uradar: [
-      ...addToArray(suggestions.radarTargetOptions, 3),
-      suggestions.radarSortOptions,
-      ["0"],
-      ["0", "1"],
-      ["[variable]"],
-    ],
+    uradar: [...addToArray(suggestions.radarTargetOptions, 3), suggestions.radarSortOptions, ["0"], ["0", "1"], ["[variable]"]],
     ulocate: [
       suggestions.ulocateFindOptions,
       suggestions.ulocateGroups,
@@ -879,8 +723,7 @@ const forbiddenVarName = [
   ...suggestions.lookupOptions,
   ...suggestions.radarSortOptions,
   ...suggestions.radarTargetOptions,
-  "always"
+  "always",
 ];
 
-
-export{ database, logicGroups, suggestions, autoSuggest, forbiddenVarName, parameters};
+export { database, logicGroups, suggestions, autoSuggest, forbiddenVarName, parameters};
