@@ -517,6 +517,7 @@ class MlogTextEditor {
               this.updateVar(word, line[this.activeBlock[0]], line, this.activeBlock[0]);
             }
           } else this.moveCursor(-1, 0);
+          line = this.textBufferArray[this.activeBlock[1]];
           break;
 
         case this.hotkeys.removeWord:
@@ -536,6 +537,7 @@ class MlogTextEditor {
         case this.hotkeys.newLine:
           this.previousKeyLog = "newLine: " + this.hotkeys.newLine;
           this.newLine(["[function]"], this.activeBlock[1] + 1);
+          line = this.textBufferArray[this.activeBlock[1]];
 
           break;
         case this.hotkeys.pageUp:
@@ -821,7 +823,6 @@ class MlogTextEditor {
   render(lineToHighlight = -1) {
     this.clear();
     this.ctx.textBaseline = "top";
-    this.renderPreviousKeyLog();
     this.ctx.translate(0, -this.camera.y);
     this.renderCursor();
     this.ctx.fillStyle = "#ff0000";
@@ -836,6 +837,7 @@ class MlogTextEditor {
       this.renderLine(lineIndex, this.isValidLogicLine(this.textBufferArray[lineIndex]) ? this.logicLineNumbers[lineIndex] : " ");
     this.renderSuggestionsBox(this.maxSuggestions);
     this.ctx.translate(0, this.camera.y);
+    this.renderPreviousKeyLog();
   }
 }
 
