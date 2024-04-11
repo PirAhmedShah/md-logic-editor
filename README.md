@@ -3,7 +3,7 @@
 
 ## Features
 
-Auto completion
+Auto completion \n /n
 Syntax Highlighting
 Links
 Labels
