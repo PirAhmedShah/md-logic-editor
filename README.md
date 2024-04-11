@@ -3,8 +3,8 @@
 
 ## Features
 
-> Auto completion
-> Syntax Highlighting
-> Checks if certain variable or value is at right place.
-> Links
-> Labels
+Auto completion
+Syntax Highlighting
+Links
+Labels
+Checks if certain value or variable is at right place.
