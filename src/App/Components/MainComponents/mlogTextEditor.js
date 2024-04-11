@@ -1,7 +1,7 @@
-import { suggestions, autoSuggest, forbiddenVarName, parameters, logicGroups, database } from "./database.js";
+import { suggestions, autoSuggest, forbiddenVarName, parameters, logicGroups} from "../Global/database.js";
 
 class MlogTextEditor {
-  constructor(canvas, fontSize) {
+  constructor(canvasManager, fontSize) {
     //Theme, I will add options to  change them.
     this.theme = {
       background: "#272822",
@@ -69,8 +69,9 @@ class MlogTextEditor {
     this.fontSize = fontSize;
     this.leftMargin = fontSize * 4;
     this.topMargin = 0;
-    this.canvas = canvas;
-    this.ctx = canvas.getContext("2d");
+    this.canvasManager = canvasManager;
+    this.canvas = canvasManager.canvas;
+    this.ctx = this.canvas.getContext("2d");
     this.activeBlock = [0, 0]; // [current Word of Line , Current Line ];
     this.autoCompletionArray = [];
     this.logicLineNumbers = [];
@@ -214,7 +215,7 @@ class MlogTextEditor {
 
     let topMostLine = Math.floor(this.camera.y / this.fontSize);
     let maxLinesToRender = Math.floor(this.canvas.h / this.fontSize);
-    let lastLine = Math.min(maxLinesToRender + topMostLine, this.textBufferArray.length) - this.maxSuggestions;
+    let lastLine = Math.min(maxLinesToRender + topMostLine, this.textBufferArray.length)-1;
     console.log("DX "+dX)
     console.log("DY "+dY)
     if (this.activeBlock[1] > lastLine && dY > 0) this.scrollPage(1);
@@ -299,6 +300,7 @@ if (attr[0] === "[string]") {
     return prevPosY !== this.camera.y;
   }
   init() {
+    this.canvasManager.init();
     this.ctx.font = this.fontSize + "px monospace";
     this.makeActiveBlockSafe();
     this.canvas.addEventListener("keydown", (e) => {
