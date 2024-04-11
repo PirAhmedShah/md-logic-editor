@@ -1,47 +1,12 @@
-import { suggestions, autoSuggest, forbiddenVarName, parameters, logicGroups} from "../Global/main.js";
+import { suggestions, autoSuggest, forbiddenVarName, parameters, logicGroups } from "../Database/main.js";
 
 class MlogTextEditor {
-  constructor(canvasManager, fontSize) {
+  constructor(canvasManager, fontSize,theme, hotkeys) {
     //Theme, I will add options to  change them.
-    this.theme = {
-      background: "#272822",
-      backgroundLight: "#2E2D22",
-      foreground: "#F8F8F2",
-      comment: "#AFAFAF",
-      red: "#F92672",
-      orange: " #FD971F",
-      lightOrange: "#E69F66",
-      yellow: "#E6DB74",
-      green: "#A6E22E",
-      blue: "#66D9EF",
-      hightlightColor: "#101812",
-      purple: "#AE81FF",
-    };
+    this.theme = theme;
     this.maxSuggestions = 8;
     this.previousKeyLog = "";
-    this.hotkeys = {
-      cursorLeft: "ArrowLeft",
-      cursorRight: "ArrowRight",
-      cursorUp: "ArrowUp",
-      cursorDown: "ArrowDown",
-      nextWord: " ",
-      newLine: "Enter",
-      removeCharacter: "Backspace",
-      removeWord: "Delete",
-      autofill: "Tab",
-      pageUp: "PageUp",
-      pageDown: "PageDown",
-      ctrl: {
-        copyWord: "c",
-        cutWord: "x",
-        pasteWord: "v",
-        gotoTop: "h",
-        gotoMiddle: "j",
-        gotoBottom: "k",
-        zoomIn: "=",
-        zoomOut: "-",
-      },
-    };
+    this.hotkeys = hotkeys
     //This(array:array(string)) contains all the lines(array:string) those lines
     this.textBufferArray = [["[function]"]];
     this.variable = {
@@ -60,7 +25,7 @@ class MlogTextEditor {
       "@waveTime": 1,
       "@second": 1,
       "@minute": 1,
-      "@waveTime": 1
+      "@waveTime": 1,
     };
     this.label = {};
     this.labelPointingTo = {};
@@ -215,11 +180,11 @@ class MlogTextEditor {
 
     let topMostLine = Math.floor(this.camera.y / this.fontSize);
     let maxLinesToRender = Math.floor(this.canvas.h / this.fontSize);
-    let lastLine = Math.min(maxLinesToRender + topMostLine, this.textBufferArray.length)-1;
-    console.log("DX "+dX)
-    console.log("DY "+dY)
+    let lastLine = Math.min(maxLinesToRender + topMostLine, this.textBufferArray.length) - 1;
+    console.log("DX " + dX);
+    console.log("DY " + dY);
     if (this.activeBlock[1] > lastLine && dY > 0) this.scrollPage(1);
-    else if (this.activeBlock[1] < topMostLine&& dY < 0) this.scrollPage(-1);
+    else if (this.activeBlock[1] < topMostLine && dY < 0) this.scrollPage(-1);
     else {
       this.ctx.fillStyle = this.theme.backgroundLight; //`rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`
       //this.ctx.translate(0, -this.camera.y);
@@ -265,7 +230,7 @@ class MlogTextEditor {
     this.autoCompletionArray = null;
     let attr = this.getParameterArray(arr, index);
     let arrayToCheck = [];
-if (attr[0] === "[string]") {
+    if (attr[0] === "[string]") {
       this.autoCompletionArray = attr;
       return;
     }
@@ -349,25 +314,25 @@ if (attr[0] === "[string]") {
   ctrlShortcutInput(word, line, key) {
     switch (key) {
       case this.hotkeys.ctrl.gotoTop:
-        this.previousKeyLog = "gotoTop: Ctrl + "+ this.hotkeys.ctrl.gotoTop
+        this.previousKeyLog = "gotoTop: Ctrl + " + this.hotkeys.ctrl.gotoTop;
         this.gotoLine(0);
         break;
       case this.hotkeys.ctrl.gotoMiddle:
-         this.previousKeyLog = "gotoMiddle: Ctrl + "+this.hotkeys.ctrl.gotoMiddle
+        this.previousKeyLog = "gotoMiddle: Ctrl + " + this.hotkeys.ctrl.gotoMiddle;
         this.gotoLine(Math.floor(this.textBufferArray.length / 2));
         break;
       case this.hotkeys.ctrl.gotoBottom:
-        this.previousKeyLog = "gotoBottom: Ctrl + "+ this.hotkeys.ctrl.gotoBottom
+        this.previousKeyLog = "gotoBottom: Ctrl + " + this.hotkeys.ctrl.gotoBottom;
         this.gotoLine(this.textBufferArray.length - 1);
         break;
       case this.hotkeys.ctrl.copyWord:
-        this.previousKeyLog = "copyWord: Ctrl + "+ this.hotkeys.ctrl.copyWord
+        this.previousKeyLog = "copyWord: Ctrl + " + this.hotkeys.ctrl.copyWord;
         navigator.clipboard.writeText(word).then(() => {
           console.log("Navigator > Copied");
         });
         break;
       case this.hotkeys.ctrl.cutWord:
-        this.previousKeyLog = "cutWord: Ctrl + "+ this.hotkeys.ctrl.cutWord
+        this.previousKeyLog = "cutWord: Ctrl + " + this.hotkeys.ctrl.cutWord;
         navigator.clipboard.writeText(word).then(() => {
           console.log("Navigator > Cut");
           line[this.activeBlock[0]] = "";
@@ -375,7 +340,7 @@ if (attr[0] === "[string]") {
         });
         break;
       case this.hotkeys.ctrl.pasteWord:
-        this.previousKeyLog = "pasteWord: Ctrl + "+ this.hotkeys.ctrl.pasteWord
+        this.previousKeyLog = "pasteWord: Ctrl + " + this.hotkeys.ctrl.pasteWord;
         navigator.clipboard.readText().then((str) => {
           console.log("Navigator > Pasted");
           if (str.includes("\n") || str.includes(" ")) return;
@@ -385,12 +350,12 @@ if (attr[0] === "[string]") {
         });
         break;
       case this.hotkeys.ctrl.zoomOut:
-        this.previousKeyLog = "zoomOut: Ctrl + "+ this.hotkeys.ctrl.zoomOut
+        this.previousKeyLog = "zoomOut: Ctrl + " + this.hotkeys.ctrl.zoomOut;
         this.updateFont(-1);
         break;
 
       case this.hotkeys.ctrl.zoomIn:
-        this.previousKeyLog = "zoomIn: Ctrl + "+ this.hotkeys.ctrl.zoomIn
+        this.previousKeyLog = "zoomIn: Ctrl + " + this.hotkeys.ctrl.zoomIn;
         this.updateFont(1);
         break;
     }
@@ -492,13 +457,13 @@ if (attr[0] === "[string]") {
     } else
       primary: switch (key) {
         case this.hotkeys.autofill:
-          this.previousKeyLog = "autofill: "+this.hotkeys.autofill
+          this.previousKeyLog = "autofill: " + this.hotkeys.autofill;
           wasAutoCompletedLastTime = this.autoCompletionArray.length > 0 && this.autoFill(0, line, this.activeBlock[0]);
           if (wasAutoCompletedLastTime) word = line[this.activeBlock[0]];
 
           break;
         case this.hotkeys.nextWord:
-          this.previousKeyLog = "nextWord: "+this.hotkeys.nextWord
+          this.previousKeyLog = "nextWord: " + this.hotkeys.nextWord;
           if (this.isCommand(line)) this.onCommand(line, this.activeBlock[1]);
           switch (this.activeBlock[0]) {
             case 0:
@@ -539,7 +504,7 @@ if (attr[0] === "[string]") {
           break;
 
         case this.hotkeys.removeCharacter:
-          this.previousKeyLog = "removeCharacter: "+ this.hotkeys.removeCharacter
+          this.previousKeyLog = "removeCharacter: " + this.hotkeys.removeCharacter;
           if (line[0] == "" || (this.isAutoGenerated(line[0]) && this.activeBlock[0] == 0)) {
             if (this.activeBlock[1] <= 0) return;
             this.textBufferArray.splice(this.activeBlock[1], 1);
@@ -555,7 +520,7 @@ if (attr[0] === "[string]") {
           break;
 
         case this.hotkeys.removeWord:
-          this.previousKeyLog = "removeWord: "+this.hotkeys.removeWord
+          this.previousKeyLog = "removeWord: " + this.hotkeys.removeWord;
           shouldUpdateAutoCompletionArr = false;
           if (word === "") this.moveCursor(-1, 0);
           if (word === "" && this.activeBlock[0] == 0 && this.activeBlock[1] > 0) {
@@ -569,45 +534,45 @@ if (attr[0] === "[string]") {
           break;
 
         case this.hotkeys.newLine:
-          this.previousKeyLog = "newLine: "+this.hotkeys.newLine
+          this.previousKeyLog = "newLine: " + this.hotkeys.newLine;
           this.newLine(["[function]"], this.activeBlock[1] + 1);
 
           break;
         case this.hotkeys.pageUp:
-          this.previousKeyLog = "pageUp: "+this.hotkeys.pageUp
+          this.previousKeyLog = "pageUp: " + this.hotkeys.pageUp;
           renderOnKeyPress = this.scrollPage(-Math.floor(this.canvas.h / this.fontSize));
           if (renderOnKeyPress) this.moveCursor(0, Math.floor(this.camera.y / this.fontSize), true, true);
 
           break;
 
         case this.hotkeys.pageDown:
-          this.previousKeyLog = "pageDown: "+this.hotkeys.pageDown
+          this.previousKeyLog = "pageDown: " + this.hotkeys.pageDown;
           renderOnKeyPress = this.scrollPage(Math.floor(this.canvas.h / this.fontSize));
           if (renderOnKeyPress) this.moveCursor(0, Math.floor(this.camera.y / this.fontSize), true, true);
 
           break;
 
         case this.hotkeys.cursorUp:
-          this.previousKeyLog = "cursorUp: "+this.hotkeys.cursorUp
+          this.previousKeyLog = "cursorUp: " + this.hotkeys.cursorUp;
           renderOnKeyPress = !(this.activeBlock[1] == 0);
           this.moveCursor(0, -1);
           line = this.textBufferArray[this.activeBlock[1]];
           break;
 
         case this.hotkeys.cursorDown:
-          this.previousKeyLog = "cursorDown: "+this.hotkeys.cursorDown
+          this.previousKeyLog = "cursorDown: " + this.hotkeys.cursorDown;
           renderOnKeyPress = !(this.activeBlock[1] === this.textBufferArray.length - 1);
           this.moveCursor(0, 1);
           line = this.textBufferArray[this.activeBlock[1]];
           break;
 
         case this.hotkeys.cursorRight:
-          this.previousKeyLog = "cursorRight: "+this.hotkeys.cursorRight
+          this.previousKeyLog = "cursorRight: " + this.hotkeys.cursorRight;
           this.moveCursor(1, 0);
           break;
 
         case this.hotkeys.cursorLeft:
-          this.previousKeyLog = "cursorLeft: "+this.hotkeys.cursorLeft
+          this.previousKeyLog = "cursorLeft: " + this.hotkeys.cursorLeft;
           this.moveCursor(-1, 0);
           break;
 
@@ -690,8 +655,7 @@ if (attr[0] === "[string]") {
     else
       switch (index) {
         case 0:
-          if (this.isCommand(array)) return this.theme.red;
-          else return this.theme[logicGroups.getLogicGroupColor(firstKeyword)];
+          return this.theme[logicGroups.getLogicGroupColor(firstKeyword)];
 
         case 1:
           if (
@@ -849,15 +813,15 @@ if (attr[0] === "[string]") {
     this.ctx.fillStyle = "#000";
     this.ctx.fillRect(this.cursor.x, this.cursor.y, this.cursor.w, this.cursor.h);
   }
-  renderPreviousKeyLog(){
-    this.ctx.fillStyle = this.theme.foreground
-    this.ctx.textAlign = "right"
-    this.ctx.fillText(">" +this.previousKeyLog+"< " ,this.canvas.w, 10,this.canvas.w2);
+  renderPreviousKeyLog() {
+    this.ctx.fillStyle = this.theme.foreground;
+    this.ctx.textAlign = "right";
+    this.ctx.fillText(">" + this.previousKeyLog + "< ", this.canvas.w, 10, this.canvas.w2);
   }
   render(lineToHighlight = -1) {
     this.clear();
     this.ctx.textBaseline = "top";
-    this.renderPreviousKeyLog()
+    this.renderPreviousKeyLog();
     this.ctx.translate(0, -this.camera.y);
     this.renderCursor();
     this.ctx.fillStyle = "#ff0000";
