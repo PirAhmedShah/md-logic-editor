@@ -6,11 +6,13 @@ const defaultTheme = {
     red: "#F92672",
     orange: " #FD971F",
     lightOrange: "#E69F66",
+    dullBlue: "#7070FF",
     yellow: "#E6DB74",
     green: "#A6E22E",
     blue: "#66D9EF",
     hightlightColor: "#101812",
     purple: "#AE81FF",
+    errorLine: "#f06060"
   }
   const defaultHotkeys = {
     cursorLeft: "ArrowLeft",
