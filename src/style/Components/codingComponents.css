@@ -1,0 +1,13 @@
+
+#coding-title{
+    font-size: 1.3em;
+    background-color: var(--clr-sec-normal);
+}
+
+#coding-div{
+    background-color: var(--clr-sec-normal);
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
+    text-align: center;
+}

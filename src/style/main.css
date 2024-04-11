@@ -1,0 +1,43 @@
+
+
+:root{
+
+    --clr-pri-light: #ffffff;
+    --clr-pri-normal: #b9b9b9;
+    --clr-pri-dark: #b4b4b4;
+    
+    --clr-sec-light: #3E3D32;
+    --clr-sec-normal: #272822;
+    --clr-sec-dark: #202020;
+
+    --clr-text: #ffffff;
+    --clr-text-inverted: #000000;
+
+    --clr-success: #3ba31c;
+    --clr-error: #a3211c;
+    --clr-info: #1c37a3;
+
+    --test: #b3ff00e1;
+}
+
+*{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+body{
+    background-color: var(--clr-sec-dark);
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 100%;
+
+}
+
+.title{
+    text-align: center;
+    font-weight: 700;
+    color: var(--clr-text);
+
+}
