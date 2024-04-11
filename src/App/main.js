@@ -1,8 +1,8 @@
-import { loadMain } from "./Main/main.js";
+import { loadHome } from "./Home/main.js";
 
 function app() {
   try {
-    loadMain()
+    loadHome()
     console.log("Ready!")
   } catch (e) {
     console.warn("Reloading page in 5 seconds...")

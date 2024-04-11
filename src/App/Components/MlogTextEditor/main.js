@@ -1,4 +1,4 @@
-import { suggestions, autoSuggest, forbiddenVarName, parameters, logicGroups} from "../Global/database.js";
+import { suggestions, autoSuggest, forbiddenVarName, parameters, logicGroups} from "../Global/main.js";
 
 class MlogTextEditor {
   constructor(canvasManager, fontSize) {
