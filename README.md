@@ -3,8 +3,4 @@
 
 ## Features
 
-Auto completion \n /n
-Syntax Highlighting
-Links
-Labels
-Checks if certain value or variable is at right place.
+Auto completion, Syntax Highlighting, Links, Labels, Auto correction.
