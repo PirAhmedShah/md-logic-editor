@@ -2,16 +2,16 @@ import { loadHome } from "./Home/main.js";
 
 function app() {
   try {
-    loadHome()
-    console.log("Ready!")
+    loadHome();
+    console.log("Ready!");
   } catch (e) {
-    console.warn("Reloading page in 5 seconds...")
-    setTimeout(()=>{
-      window.location.reload()
-    },5000)
+    console.error(e);
+    console.warn("Reloading page after alert...");
     alert(e);
+    
+    window.location.reload()
   }
 }
 window.onload = app;
 
-console.log("Waiting for page to load..")
+console.log("Waiting for page to load..");
