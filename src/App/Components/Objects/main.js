@@ -246,7 +246,7 @@ const logicGroups = {
     ulocate: "UnitControl",
     ".label": "Commands",
     ".addlink": "Commands",
-    ".func": "Commands",
+    //".func": "Commands",
   },
 };
 //variables existing_vars,
@@ -422,7 +422,7 @@ const autoSuggest = {
   read: ["[result]", "[from]", "[at]"],
   write: ["[value]", "[to]", "[at]"],
   ".addlink": ["[building]"],
-  ".func": ["[function name]", "[parameter1]", "[parameter2]"],
+  //".func": ["[function name]", "[parameter1]", "[parameter2]"],
   "#": ["[comment]"],
   ".label": ["[name]"],
   draw: {
@@ -581,13 +581,13 @@ const parameters = {
     "ulocate",
     "uradar",
     ".addlink",
-    ".func",
+   // ".func",
     ".label",
     "#",
   ]),
   1: {
     ".addlink": [new Set(suggestions.logicNames)],
-    ".func": [emptySet, emptySet, emptySet],
+   // ".func": [emptySet, parms.varOnly,parms.varOnly],
     ".label": [new Set(["[label]"])],
     "#": [emptySet],
     read: [parms.varOnly, parms.buildingsOnly, parms.numbersOnly],
@@ -889,7 +889,7 @@ const syntaxHighlighter = {
     repeated.variable,
   ],
   ".addlink": [(keyword, editor) => (parameters[1][".addlink"][0].has(keyword) ? editor.theme.blue : "#ffffff")],
-  ".func": [(keyword, editor) => editor.theme.green, (keyword, editor) => editor.theme.orange, (keyword, editor) => editor.theme.orange],
+  //".func": [(keyword, editor) => editor.theme.green, (keyword, editor) => editor.theme.orange, (keyword, editor) => editor.theme.orange],
   ".label": [(keyword, editor) => (editor.isExisting(keyword, "label") ? editor.theme.green : "#ffffff")],
 };
 const forbiddenVarName = new Set([
