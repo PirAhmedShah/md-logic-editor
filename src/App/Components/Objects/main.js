@@ -1,3 +1,6 @@
+"use strict";
+
+console.log("____OBJECTS MAIN.js____");
 let database = {
   item: [
     "copper",
@@ -259,6 +262,7 @@ const suggestions = {
   commands: new Set([".addlink", ".label"]),
   keywordWithOptions: new Set(["jump", "draw", "control", "op", "ucontrol"]),
   specialKeywords: new Set(["[number]", "[variable]", "[color]", "[label]"]),
+  order: new Set(["0","1"]),
   readOnlyVarNames: new Set([
     "@tick",
     "@time",
@@ -318,7 +322,7 @@ const suggestions = {
     "pathfind",
     "getBlock",
   ]),
-  jumpOperators: new Set(["equal", "notEqual", "always", "lessThan", "greaterThan", "lessThanEq", "greaterThanEq"]),
+  jumpOperators: new Set(["equal", "notEqual", "always", "lessThan", "greaterThan", "lessThanEq", "greaterThanEq","strictEqual"]),
   operators: new Set([
     "add",
     "sub",
@@ -410,6 +414,7 @@ const suggestions = {
     "@payloadCount",
     "@payloadType",
     "@id",
+    "@config"
   ]),
   unitNames: new Set([...database.unit].map((str) => "@" + str)),
   itemNames: new Set([...database.item].map((str) => "@" + str)),
@@ -546,15 +551,13 @@ let parms = {
   numbersOnly: new Set(suggestions.numbers),
   existingVarsOnly: new Set(["existing_vars"]),
   colorOnly: new Set(["[color]"]),
-  radarTargetOptionsOnly: new Set(suggestions.radarTargetOptions),
 
   stateOnly: new Set(suggestions.state),
-  radarSortOptionsOnly: new Set(suggestions.radarSortOptions),
   variable: new Set(suggestions.variable),
   constant: new Set(suggestions.constant),
   allVars: new Set(suggestions.allVars),
   all: new Set(suggestions.all),
-  orderOnly: new Set(["0", "1"]),
+  orderOnly:suggestions.order,
 };
 const parameters = {
   0: new Set([
@@ -625,7 +628,7 @@ const parameters = {
         color: [parms.buildingsOnly, parms.colorOnly],
       },
     ],
-    radar: [parms.radarTargetOptionsOnly, parms.radarTargetOptionsOnly, parms.radarTargetOptionsOnly, parms.radarSortOptionsOnly, parms.buildingsOnly, parms.orderOnly, parms.varOnly],
+    radar: [suggestions.radarTargetOptions, suggestions.radarTargetOptions, suggestions.radarTargetOptions, suggestions.radarSortOptions, parms.buildingsOnly, parms.orderOnly, parms.varOnly],
     sensor: [parms.varOnly, parms.buildingsOnly, suggestions.allSensables],
     set: [parms.variable, parms.constant],
     op: [
@@ -690,6 +693,7 @@ const parameters = {
         greaterThan: [parms.allVars, parms.all],
         lessThanEq: [parms.allVars, parms.all],
         greaterThanEq: [parms.allVars, parms.all],
+        strictEqual:[parms.allVars, parms.all]
       },
     ],
 
@@ -718,180 +722,11 @@ const parameters = {
         getBlock: [parms.numbersOnly, parms.numbersOnly, parms.varOnly, parms.varOnly, parms.varOnly],
       },
     ],
-    uradar: [parms.radarTargetOptionsOnly, parms.radarTargetOptionsOnly, parms.radarTargetOptionsOnly, parms.radarSortOptionsOnly, parms.buildingsOnly, parms.orderOnly, parms.varOnly],
+    uradar: [suggestions.radarTargetOptions, suggestions.radarTargetOptions, suggestions.radarTargetOptions, suggestions.radarSortOptions, parms.buildingsOnly, parms.orderOnly, parms.varOnly],
     ulocate: [suggestions.ulocateFindOptions, suggestions.ulocateGroups, parms.stateOnly, suggestions.itemNames, parms.varOnly, parms.varOnly, parms.varOnly, parms.varOnly],
   },
 };
-let repeated = {
-  nums: (keyword, editor) => (editor.isNumber(keyword) ? editor.theme.purple : editor.isExisting(keyword, "variable") ? editor.theme.orange : "#ffffff"),
-  existingVars: (keyword, editor) => (editor.isExisting(keyword, "variable") ? editor.theme.orange : "#ffffff"),
-  color: (keyword, editor) => (editor.isValidHex(keyword) ? keyword.replace("%", "#") : "#ffffff"),
-  variable: (keyword, editor) => (editor.isExisting(keyword, "variable") && !suggestions.readOnlyVarNames.has(keyword) ? editor.theme.orange : "#ffffff"),
-  buildings: (keyword, editor) => (editor.linkedBuildings.has(keyword) ? editor.theme.blue : editor.isExisting(keyword, "variable") ? editor.theme.orange : "#ffffff"),
-  state: (keyword, editor) => (suggestions.stateValues.has(keyword) ? editor.theme.purple : editor.isExisting(keyword, "variable") ? editor.theme.orange : "#ffffff"),
-  radarTarget: (keyword, editor) => (parms.radarTargetOptionsOnly.has(keyword) ? editor.theme.green : "#ffffff"),
-  constant: (keyword, editor) => (editor.isConstant(keyword) ? editor.theme.purple : editor.isExisting(keyword, "variable") ? editor.theme.orange : "#ffffff"),
-  allVars: (keyword, editor) =>
-    editor.isConstant(keyword) ? editor.theme.purple : editor.isExisting(keyword, "variable") ? editor.theme.orange : editor.linkedBuildings.has(keyword) ? editor.theme.blue : 0,
-  order: (keyword, editor) => (parms.orderOnly.has(keyword) ? editor.theme.purple : "#ffffff"),
-  itemNames: (keyword, editor) => (suggestions.itemNames.has(keyword) ? editor.theme.blue : "#ffffff"),
-};
-repeated.opTwoVars = [repeated.variable, repeated.constant, repeated.constant];
-repeated.opOneVar = [repeated.variable, repeated.constant];
-const syntaxHighlighter = {
-  keywordWithOptions: {
-    draw: [(keyword, editor) => (parameters[1].draw[0].has(keyword) ? editor.theme.green : "#ffffff")],
-    op: [(keyword, editor) => (parameters[1].op[0].has(keyword) ? editor.theme.green : "#ffffff")],
-    control: [(keyword, editor) => (parameters[1].control[0].has(keyword) ? editor.theme.green : "#ffffff")],
-    ucontrol: [(keyword, editor) => (parameters[1].ucontrol[0].has(keyword) ? editor.theme.green : "#ffffff")],
-    jump: [
-      (keyword, editor) => (editor.isExisting(keyword, "label") ? editor.theme.green : editor.isNumber(keyword) ? editor.theme.purple : "#ffffff"),
-      (keyword, editor) => (parameters[1].jump[1].has(keyword) ? editor.theme.green : "#ffffff"),
-    ],
-  },
-  read: [repeated.variable, repeated.buildings, repeated.nums],
-  write: [repeated.existingVars, repeated.buildings, repeated.nums],
-  draw: {
-    clear: [repeated.nums, repeated.nums, repeated.nums],
-    //[R,G,B]
-    color: [repeated.nums, repeated.nums, repeated.nums, repeated.nums],
-    //[x y x2 y2]
-    col: [repeated.color],
-    line: [repeated.nums, repeated.nums, repeated.nums, repeated.nums],
-    //[x y x2 y2]
-    stroke: [repeated.nums],
-    rect: [repeated.nums, repeated.nums, repeated.nums, repeated.nums],
-    lineRect: [repeated.nums, repeated.nums, repeated.nums, repeated.nums],
-    poly: [repeated.nums, repeated.nums, repeated.nums, repeated.nums, repeated.nums],
-    linePoly: [repeated.nums, repeated.nums, repeated.nums, repeated.nums, repeated.nums],
-    triangle: [repeated.nums, repeated.nums, repeated.nums, repeated.nums, repeated.nums, repeated.nums],
-    image: [repeated.nums, repeated.nums, (keyword) => (parameters[1].draw[1].image[2].has(keyword) ? editor.theme.blue : "#ffffff"), repeated.nums, repeated.nums],
-  },
-  print: [repeated.existingVars],
-  drawflush: [repeated.buildings],
-  printflush: [repeated.buildings],
-  getlink: [repeated.variable, repeated.nums],
-  control: {
-    enabled: [repeated.buildings, repeated.state],
-    shoot: [repeated.buildings, repeated.nums, repeated.nums, repeated.state],
-    shootp: [repeated.buildings, repeated.existingVars, repeated.state],
-    config: [repeated.buildings, repeated.itemNames],
-    color: [repeated.buildings, repeated.color],
-  },
-  radar: [
-    repeated.radarTarget,
-    repeated.radarTarget,
-    repeated.radarTarget,
-    (keyword, editor) => (parms.radarSortOptionsOnly.has(keyword) ? editor.theme.green : "#ffffff"),
-    repeated.buildings,
-    repeated.order,
-    repeated.variable,
-  ],
-  sensor: [repeated.variable, repeated.buildings, (keyword, editor) => (parameters[1].sensor[2].has(keyword) ? editor.theme.blue : "#ffffff")],
-  set: repeated.opOneVar,
-  op: {
-    add: repeated.opTwoVars,
-    sub: repeated.opTwoVars,
-    mul: repeated.opTwoVars,
-    div: repeated.opTwoVars,
-    idiv: repeated.opTwoVars,
-    mod: repeated.opTwoVars,
-    pow: repeated.opTwoVars,
-    equal: repeated.opTwoVars,
-    notEqual: repeated.opTwoVars,
-    land: repeated.opTwoVars,
-    lessThan: repeated.opTwoVars,
-    lessThanEq: repeated.opTwoVars,
-    greaterThan: repeated.opTwoVars,
-    greaterThanEq: repeated.opTwoVars,
-    strictEqual: repeated.opTwoVars,
-    shl: repeated.opTwoVars,
-    shr: repeated.opTwoVars,
-    or: repeated.opTwoVars,
-    and: repeated.opTwoVars,
-    xor: repeated.opTwoVars,
-    not: repeated.opOneVar,
-    max: repeated.opTwoVars,
-    min: repeated.opTwoVars,
-    angle: repeated.opTwoVars,
-    angleDiff: repeated.opTwoVars,
-    len: repeated.opTwoVars,
-    noise: repeated.opTwoVars,
-    abs: repeated.opOneVar,
-    log: repeated.opOneVar,
-    log10: repeated.opOneVar,
-    floor: repeated.opOneVar,
-    ceil: repeated.opOneVar,
-    sqrt: repeated.opOneVar,
-    rand: repeated.opOneVar,
-    sin: repeated.opOneVar,
-    cos: repeated.opOneVar,
-    tan: repeated.opOneVar,
-    asin: repeated.opOneVar,
-    acos: repeated.opOneVar,
-    atan: repeated.opOneVar,
-  },
 
-  lookup: [(keyword, editor) => (parameters[1].lookup[0].has(keyword) ? editor.theme.green : "#ffffff"), repeated.variable, repeated.nums],
-  packcolor: [repeated.variable, repeated.nums, repeated.nums, repeated.nums, repeated.nums],
-  wait: [repeated.nums],
-  stop: [emptySet],
-  end: [emptySet],
-  jump: {
-    equal: [repeated.buildings, repeated.allVars],
-    notEqual: [repeated.buildings, repeated.allVars],
-    always: [],
-    lessThan: [repeated.buildings, repeated.allVars],
-    greaterThan: [repeated.buildings, repeated.allVars],
-    lessThanEq: [repeated.buildings, repeated.allVars],
-    greaterThanEq: [repeated.buildings, repeated.allVars],
-  },
-
-  ubind: [(keyword, editor) => (editor.isExisting(keyword, "variable") ? editor.theme.orange : suggestions.unitNames.has(keyword) ? editor.theme.blue : "#ffffff")],
-  ucontrol: {
-    move: [repeated.nums, repeated.nums],
-    idle: [],
-    stop: [],
-    mine: [repeated.nums, repeated.nums],
-    unbind: [],
-    approach: [repeated.nums, repeated.nums, repeated.nums],
-    within: [repeated.variable, repeated.nums, repeated.nums, repeated.nums],
-    flag: [repeated.nums],
-    payEnter: [],
-    payDrop: [],
-    payTake: [repeated.state],
-    itemTake: [repeated.buildings, repeated.itemNames, repeated.nums],
-    itemDrop: [repeated.buildings, repeated.nums],
-    boost: [repeated.state],
-    target: [repeated.nums, repeated.nums, repeated.state],
-    targetp: [repeated.existingVars, repeated.state],
-    autoPathfind: [],
-    pathfind: [repeated.nums, repeated.nums],
-    getBlock: [repeated.nums, repeated.nums, repeated.variable, repeated.variable, repeated.variable],
-  },
-  uradar: [
-    repeated.radarTarget,
-    repeated.radarTarget,
-    repeated.radarTarget,
-    (keyword, editor) => (parms.radarSortOptionsOnly.has(keyword) ? editor.theme.green : "#ffffff"),
-    (keyword, editor) => (keyword == "0" ? editor.theme.purple : "#ffffff"),
-    repeated.order,
-    repeated.variable,
-  ],
-  ulocate: [
-    (keyword, editor) => (suggestions.ulocateFindOptions.has(keyword) ? editor.theme.green : "#ffffff"),
-    (keyword, editor) => (suggestions.ulocateGroups.has(keyword) ? editor.theme.green : "#ffffff"),
-    repeated.state,
-    repeated.itemNames,
-    repeated.variable,
-    repeated.variable,
-    repeated.variable,
-    repeated.variable,
-  ],
-  ".addlink": [(keyword, editor) => (parameters[1][".addlink"][0].has(keyword) ? editor.theme.blue : "#ffffff")],
-  //".func": [(keyword, editor) => editor.theme.green, (keyword, editor) => editor.theme.orange, (keyword, editor) => editor.theme.orange],
-  ".label": [(keyword, editor) => (editor.isExisting(keyword, "label") ? editor.theme.green : "#ffffff")],
-};
 const forbiddenVarName = new Set([
   ...parameters[0],
   ...suggestions.allNames,
@@ -909,4 +744,4 @@ const forbiddenVarName = new Set([
   ...suggestions.readOnlyVarNames,
   "always",
 ]);
-export { database, logicGroups, suggestions, autoSuggest, forbiddenVarName, parameters, syntaxHighlighter, emptySet };
+export { database, logicGroups, suggestions, autoSuggest, forbiddenVarName, parameters, emptySet };

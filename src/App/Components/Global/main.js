@@ -1,3 +1,4 @@
+"use strict";
 const defaultTheme = {
   background: "#272822",
   backgroundLight: "#2E2D22",
@@ -13,6 +14,7 @@ const defaultTheme = {
   hightlightColor: "#101812",
   purple: "#AE81FF",
   errorLine: "#f06060",
+  none: "#FFFFFF",
 };
 const defaultKeys = {
   cursorLeft: "ArrowLeft",
@@ -37,21 +39,4 @@ const defaultKeys = {
     zoomOut: "-",
   },
 };
-function getTheme() {
-    let theme = localStorage.getItem("Theme");
-    if (typeof theme !== "string") {
-      localStorage.setItem("Theme", JSON.stringify(defaultTheme))
-      return defaultTheme;
-    };
-    return JSON.parse(theme);
-  }
-  function getKeys() {
-    let keys = localStorage.getItem("Keys");
-    if (typeof keys !== "string") {
-      localStorage.setItem("Keys", JSON.stringify(defaultKeys))
-      return defaultTheme;
-    };return JSON.parse(keys);
-  }
-
-    
-export { defaultTheme, defaultKeys, getTheme, getKeys };
+export { defaultTheme, defaultKeys};

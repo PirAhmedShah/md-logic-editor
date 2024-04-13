@@ -54,3 +54,16 @@ body{
     height: 90%;
     justify-content: center;
 }
+@media screen and (max-width: 640px)  {
+    body::before{
+        text-align: center;
+        padding: 35% 30%;
+        content: "ERROR: UI IS NOT DESIGNED FOR THIS WIDTH";
+        color: var(--clr-error);
+        font-weight: 600;
+    }
+    body *{
+        display: none !important;
+    }
+    
+}
