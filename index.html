@@ -3,16 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="src/App/main.js" type="module"></script>
     <link rel="stylesheet" href="src/style/app.css">
-    <link rel="stylesheet" href="src/style/Components/codingComponents.css">
+    <link rel="stylesheet" href="src/style/Components/editor.css">
     <link rel="shortcut icon" href="src/images/favicon.ico" type="image/x-icon">
     <title>Logic Editor</title>
   </head>
   <body>
-    <div id="main-title" class="title">Mlog Editor</div>
+    <div id="loading-overlay">Loading...</div>
+    <div id="main-title" class="title">None of your business</div>
     <section id="main-section">
-      <div id="coding-div">
-        <ul id="coding-options">
+      <div id="editor-div">
+        <ul id="editor-options">
           <button disabled >Open File</button>
           <button id="import-clipboard-btn">Import Clipboard</button>
           <button id="export-clipboard-btn">Export Clipboard</button>
@@ -21,14 +23,12 @@
           <button disabled >Keys </button>
 
         </ul>
-        <canvas id="coding-canvas" contentEditable ></canvas>
-      
+        <canvas id="editor" contentEditable ></canvas>
    
       </div>
     </section>
 
 
-    <script src="src/App/main.js" type="module"></script>
 
   </body>
 </html>

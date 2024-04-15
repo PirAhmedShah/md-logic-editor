@@ -1,11 +1,9 @@
-import { CanvasManager } from "../../Components/CanvasManager/main.js";
-import { MlogTextEditor } from "../../Components/MlogTextEditor/main.js";
-import {getTheme,getKeys } from "../../Components/Global/main.js";
+"use strict";
+import { MDEditor } from "../../Components/MDEditor/main.js";
+import { getTheme,getKeys } from "../../Components/Global/functions.js";
 import {setupOptions} from "./options.js";
 
-let canvasManager = new CanvasManager("coding-canvas",  0.875, 0.875);
-
-let mlogTextEditor = new MlogTextEditor(canvasManager, 18,getTheme(),getKeys());
+let mdEditor = new MDEditor(16,getTheme(),getKeys());
 
 
 let mlog = `
@@ -15,10 +13,17 @@ let mlog = `
 # Ctrl+h, Ctrl+j, Ctrl+k: Goto Top, Goto Middle, Goto Bottom
 # Ctrl+x, Ctrl+c, Ctrl+v: Cut, Copy, Paste Current Word.
 # Ctrl+-, Ctrl+=: Zoom Out, Zoom In 
+jump 1 equal res1 res2
+.addlink cell
+printflush cell1
+myLabel1:
+print "ayo mb"
+print "asda
 `
 function loadEditor() {
+  
+  console.log("____LOAD EDITOR____")
   setupOptions();
-  mlogTextEditor.loadMlog(mlog)
-  mlogTextEditor.init();
+  mdEditor.loadMlog(mlog)
 }
-export { loadEditor, mlogTextEditor };
+export { loadEditor, mdEditor };

@@ -1,25 +1,4 @@
 
-
-:root{
-
-    --clr-pri-light: #ffffff;
-    --clr-pri-normal: #b9b9b9;
-    --clr-pri-dark: #b4b4b4;
-    
-    --clr-sec-light: #3E3D32;
-    --clr-sec-normal: #272822;
-    --clr-sec-dark: #202020;
-
-    --clr-text: #ffffff;
-    --clr-text-inverted: #000000;
-
-    --clr-success: #3ba31c;
-    --clr-error: #a3211c;
-    --clr-info: #1c37a3;
-
-    --test: #b3ff00e1;
-}
-
 *{
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     padding: 0;
@@ -28,7 +7,7 @@
 }
 
 body{
-    background-color: var(--clr-sec-dark);
+    background-color: var(--clr-background);
     display: flex;
     flex-direction: column;
     flex: 1 1 100%;
@@ -38,12 +17,11 @@ body{
 .title{
     text-align: center;
     font-weight: 700;
-    color: var(--clr-text);
+    color: var(--clr-foreground);
 
 }
 
 #main-title{
-    background-color: var(--clr-sec-dark);
     font-size: 1.75em;
     display: inline;
     height: 10%;
@@ -53,4 +31,55 @@ body{
     flex: 1 1 100%;
     height: 90%;
     justify-content: center;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+ 
+::-webkit-scrollbar-thumb {
+  background: #555; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--clr-highlight); 
+}
+
+#loading-overlay{
+    text-align: center;
+    padding-top: 40vh;
+    background-color: black;
+    color: white;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+    left: 0px;    
+}
+
+@keyframes fadeout {
+    
+    0%{
+        background-color: black;
+        color: white;
+    }
+    100%{
+        background-color: transparent;
+        color: transparent;
+    }
+
+}
+@media screen and (max-width: 640px)  {
+    body::before{
+        text-align: center;
+        padding: 35% 30%;
+        content: "ERROR: UI IS NOT DESIGNED FOR THIS WIDTH";
+        color: var(--clr-errorLine);
+        font-weight: 600;
+    }
+    body *{
+        display: none !important;
+    }
+    
 }
