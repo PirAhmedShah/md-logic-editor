@@ -223,7 +223,7 @@ let database = {
 };
 
 const logicGroups = {
-  groupColors: { IO: "lightOrange", BlockControl: "red", Operations: "purple", FlowControl: "blue", UnitControl: "yellow", Commands: "dullBlue" },
+  groupColors: { IO: "lightOrange", BlockControl: "red", Operations: "purple", FlowControl: "cyan", UnitControl: "yellow", Commands: "blue" },
   keywordGroup: {
     read: "IO",
     write: "IO",
@@ -252,15 +252,38 @@ const logicGroups = {
     //".func": "Commands",
   },
 };
-//variables existing_vars,
-//existing_vars, existing_label, [string], [label], [variable], [number], [color], linked_buildings;
+//variables existing_var,
+//existing_var, existing_label, [string], [label], [variable], [number], [color], linked_buildings;
 
-//existing_vars means existing variables that are not in readOnlyVarNames.
+//existing_var means existing variables that are not in readOnlyVarNames.
 const suggestions = {
-  buildings: ["linked_buildings", "existing_vars"],
+  buildings: ["linked_buildings", "existing_var"],
   logicNames: new Set(database.block.map((str) => str.split("-").pop())),
   commands: new Set([".addlink", ".label"]),
   keywordWithOptions: new Set(["jump", "draw", "control", "op", "ucontrol"]),
+  validFirstWords: new Set([
+    "read",
+    "write",
+    "draw",
+    "print",
+    "printflush",
+    "drawflush",
+    "getlink",
+    "control",
+    "radar",
+    "sensor",
+    "op",
+    "set",
+    "lookup",
+    "packcolor",
+    "wait",
+    "stop",
+    "end",
+    "jump",
+    "ubind",
+    "ucontrol",
+    "ulocate",
+    "uradar"]),
   specialKeywords: new Set(["[number]", "[variable]", "[color]", "[label]"]),
   order: new Set(["0","1"]),
   readOnlyVarNames: new Set([
@@ -280,19 +303,19 @@ const suggestions = {
     "@minute",
   ]),
   keywordWithOptionsAutoFill: {
-    jump: "[operator]",
-    draw: "[type]",
-    control: "[set]",
-    op: "[operator]",
-    ucontrol: "[action]",
+    jump: ["[to]","[operator]"],
+    draw: ["[type]"],
+    control: ["[set]"],
+    op: ["[operator]"],
+    ucontrol: ["[action]"],
   },
-  state: ["true", "false", "1", "0", "existing_vars"],
+  state: ["true", "false", "1", "0", "existing_var"],
   stateValues: new Set(["true", "false", "1", "0"]),
-  numbers: ["[number]", "existing_vars"],
-  constant: ["[number]", "existing_vars", "true", "false"],
-  allVars: ["existing_vars", "linked_buildingss"],
-  all: ["[number]", "existing_vars", "true", "false", "linked_buildingss"],
-  variable: ["existing_vars", "[variable]"],
+  numbers: ["[number]", "existing_var"],
+  constant: ["[number]", "existing_var", "true", "false"],
+  allVars: ["existing_var", "linked_buildings"],
+  all: ["[number]", "existing_var", "true", "false", "linked_buildings"],
+  variable: ["existing_var", "[variable]"],
 
   lookupOptions: new Set(["item", "liquid", "block", "unit"]),
   radarTargetOptions: new Set(["any", "enemy", "player", "ally", "ground", "flying", "attacker", "boss"]),
@@ -423,133 +446,13 @@ const suggestions = {
 };
 suggestions.allNames = new Set([...suggestions.unitNames, ...suggestions.itemNames, ...suggestions.blockNames, ...suggestions.liquidNames]);
 suggestions.allSensables = new Set([...suggestions.itemNames, ...suggestions.liquidNames, ...suggestions.otherSensableProperties]);
-const autoSuggest = {
-  read: ["[result]", "[from]", "[at]"],
-  write: ["[value]", "[to]", "[at]"],
-  ".addlink": ["[building]"],
-  //".func": ["[function name]", "[parameter1]", "[parameter2]"],
-  "#": ["[comment]"],
-  ".label": ["[name]"],
-  draw: {
-    clear: ["[red]", "[green]", "[blue]"],
-    //[R,G,B]
-    color: ["[red]", "[green]", "[blue]", "[alpha]"],
-    //[R,G,B]
 
-    col: ["[hex color]"],
-
-    line: ["[x1]", "[y1]", "[x2]", "[y2]"],
-    //[x y x2 y2]
-    stroke: ["[width]"],
-    rect: ["[x1]", "[y1]", "[width]", "[height]"],
-    lineRect: ["[x1]", "[y1]", "[width]", "[height]"],
-    //[x y x2 y2]
-    poly: ["[x]", "[y]", "[sides]", "[radius]", "[rotation]"],
-    linePoly: ["[x]", "[y]", "[sides]", "[radius]", "[rotation]"],
-    triangle: ["[x1]", "[y1]", "[x2]", "[y2]", "[x3]", "[y3]"],
-    image: ["[x]", "[y]", "[size]", "[image]", "[rotation]"],
-  },
-  print: ["[string or var]"],
-  drawflush: ["[to]"],
-  printflush: ["[to]"],
-  getlink: ["[result]", "[id]"],
-  control: {
-    enabled: ["[building]", "[enabled]"],
-    shoot: ["[turret]", "[x]", "[y]", "[shoot]"],
-    shootp: ["[turret]", "[unit]", "[shoot]"],
-    config: ["[building]", "[to]"],
-    color: ["[illuminator]", "[color]"],
-  },
-  radar: ["[target]", "[and]", "[and]", "[sort]", "[building]", "[order]", "[result]"],
-  sensor: ["[result]", "[building]", "[@property]"],
-  set: ["[result]", "[value]"],
-  op: {
-    add: ["[result]", "[operand]", "[operand]"],
-    sub: ["[result]", "[operand]", "[operand]"],
-    mul: ["[result]", "[operand]", "[operand]"],
-    div: ["[result]", "[operand]", "[operand]"],
-    idiv: ["[result]", "[operand]", "[operand]"],
-    mod: ["[result]", "[operand]", "[operand]"],
-    pow: ["[result]", "[operand]", "[operand]"],
-    equal: ["[result]", "[operand]", "[operand]"],
-    notEqual: ["[result]", "[operand]", "[operand]"],
-    land: ["[result]", "[operand]", "[operand]"],
-    lessThan: ["[result]", "[operand]", "[operand]"],
-    lessThanEq: ["[result]", "[operand]", "[operand]"],
-    greaterThan: ["[result]", "[operand]", "[operand]"],
-    greaterThanEq: ["[result]", "[operand]", "[operand]"],
-    strictEqual: ["[result]", "[operand]", "[operand]"],
-    shl: ["[result]", "[operand]", "[operand]"],
-    shr: ["[result]", "[operand]", "[operand]"],
-    or: ["[result]", "[operand]", "[operand]"],
-    and: ["[result]", "[operand]", "[operand]"],
-    xor: ["[result]", "[operand]", "[operand]"],
-    not: ["[result]", "[operand]"],
-    max: ["[result]", "[operand]", "[operand]"],
-    min: ["[result]", "[operand]", "[operand]"],
-    angle: ["[result]", "[operand]", "[operand]"],
-    angleDiff: ["[result]", "[operand]", "[operand]"],
-    len: ["[result]", "[operand]", "[operand]"],
-    noise: ["[result]", "[operand]", "[operand]"],
-    abs: ["[result]", "[operand]"],
-    log: ["[result]", "[operand]"],
-    log10: ["[result]", "[operand]"],
-    floor: ["[result]", "[operand]"],
-    ceil: ["[result]", "[operand]"],
-    sqrt: ["[result]", "[operand]"],
-    rand: ["[result]", "[operand]"],
-    sin: ["[result]", "[operand]"],
-    cos: ["[result]", "[operand]"],
-    tan: ["[result]", "[operand]"],
-    asin: ["[result]", "[operand]"],
-    acos: ["[result]", "[operand]"],
-    atan: ["[result]", "[operand]"],
-  },
-  lookup: ["[type]", "[result]", "[id]"],
-  packcolor: ["[result]", "[redPercent]", "[greenPercent]", "[bluePercent]", "[alphaPercent]"],
-  wait: ["[seconds]"],
-  stop: [],
-  end: [],
-  jump: {
-    equal: ["[operand]", "[operand]"],
-    notEqual: ["[operand]", "[operand]"],
-    always: [],
-    lessThan: ["[operand]", "[operand]"],
-    greaterThan: ["[operand]", "[operand]"],
-    lessThanEq: ["[operand]", "[operand]"],
-    greaterThanEq: ["[operand]", "[operand]"],
-  },
-  ubind: ["[@unit]"],
-  ucontrol: {
-    move: ["[x]", "[y]"],
-    idle: [],
-    stop: [],
-    mine: ["[x]", "[y]"],
-    unbind: [],
-    approach: ["[x]", "[y]", "[radius]"],
-    within: ["[x]", "[y]", "[radius]", "[result]"],
-    flag: [],
-    payEnter: [],
-    payDrop: [],
-    payTake: ["[take units]"],
-    itemTake: ["[from]", "[@item]", "[amount]"],
-    itemDrop: ["[to]", "[amount]"],
-    boost: ["[enable]"],
-    target: ["[x]", "[y]", "[shoot]"],
-    targetp: ["[unit]", "[shoot]"],
-    autoPathfind: [],
-    pathfind: ["[x]", "[y]"],
-    getBlock: ["[x]", "[y]", "[type]", "[building]", "[floor]"],
-  },
-  uradar: ["[target]", "[and]", "[and]", "[sort]", "[0]", "[order]", "[result]"],
-  ulocate: ["[find]", "[group]", "[enemy]", "[@ore]", "[x]", "[y]", "[found]", "[building]"],
-};
 let emptySet = new Set();
 let parms = {
   varOnly: new Set(["[variable]"]),
   buildingsOnly: new Set(suggestions.buildings),
   numbersOnly: new Set(suggestions.numbers),
-  existingVarsOnly: new Set(["existing_vars"]),
+  existingVarsOnly: new Set(["existing_var"]),
   colorOnly: new Set(["[color]"]),
 
   stateOnly: new Set(suggestions.state),
@@ -697,7 +600,7 @@ const parameters = {
       },
     ],
 
-    ubind: [new Set([...suggestions.unitNames, "existing_vars"])],
+    ubind: [new Set([...suggestions.unitNames, "existing_var"])],
     ucontrol: [
       suggestions.uControlOptions,
       {
@@ -744,4 +647,4 @@ const forbiddenVarName = new Set([
   ...suggestions.readOnlyVarNames,
   "always",
 ]);
-export { database, logicGroups, suggestions, autoSuggest, forbiddenVarName, parameters, emptySet };
+export { database, logicGroups, suggestions,forbiddenVarName, parameters, emptySet };

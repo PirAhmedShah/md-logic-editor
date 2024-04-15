@@ -1,7 +1,7 @@
 "use strict";
 import { defaultKeys, defaultTheme } from "./main.js";
 
-function getTheme() {
+export function getTheme() {
   
   let theme = localStorage.getItem("Theme");
     if (typeof theme !== "string") {
@@ -10,18 +10,31 @@ function getTheme() {
     };
     return JSON.parse(theme);
   }
-  function getKeys() {
+  export function getKeys() {
     let keys = localStorage.getItem("Keys");
     if (typeof keys !== "string") {
       localStorage.setItem("Keys", JSON.stringify(defaultKeys))
       return defaultTheme;
-    };return JSON.parse(keys);
+    }
+    return JSON.parse(keys);
   }
 
 
-  function constrain(value,min,max) {
+  export function constrain(value,min,max) {
     return value < min ? min : value > max? max : value;
   }
 
-  export {getTheme, getKeys,constrain }
+  export function updateCSSThemeTo(theme){
     
+    Object.keys(theme).forEach(colorName=>{
+      document.documentElement.style.setProperty("--clr-"+colorName, theme[colorName]);
+         })
+  }
+  
+  
+  export function updateCSSKeysTo(keys){
+    Object.keys(keys).forEach(keyName=>{
+      document.documentElement.style.setProperty("--key-"+keyName, `"${keys[keyName]}"`);
+         })
+  }
+  

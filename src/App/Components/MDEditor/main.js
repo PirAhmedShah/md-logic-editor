@@ -1,36 +1,46 @@
-import { AutoCompletion } from "./autoCompletion.js";
-import { AutoSuggestion } from "./autoSuggestion.js";
+import { Intellisense } from "./intellisense.js";
 import { Cursor } from "./cursor.js";
 import { Input } from "./input.js";
 import { Logic } from "./logic.js";
 import { Renderer } from "./renderer.js";
 import { SyntaxHighlighter } from "./syntaxHighlighter.js";
-import { removeUnwantedParameters, isComment, isCommand} from "./utility.js";
+import { removeUnwantedParameters, isComment, isCommand } from "./utility.js";
+import { suggestions } from "../Objects/main.js";
+import { Autocomplete } from "./autoComplete.js";
+import { updateCSSKeysTo, updateCSSThemeTo } from "../Global/functions.js";
 
 export class MDEditor {
-  constructor(fontSize,theme,keys) {
-    
-    this.canvas = document.getElementById("md-editor");
-    if (this.canvas?.tagName !== "CANVAS") throw new Error("Couldn't find canvas with id 'md-editor'");
-  //console.log("____CON MDEDITOR____")
+  constructor(fontSize, theme, keys) {
+    this.canvas = document.getElementById("editor");
+    if (this.canvas?.tagName !== "CANVAS") throw new Error("Couldn't find canvas with id 'editor'");
+    this.ctx = this.canvas.getContext("2d");
+    //console.log("____CON MDEDITOR____")
     this.lines = [["[function]"]];
-    this.logic = new Logic(this);
-    this.input = new Input(this, keys);
-    this.cursor = new Cursor(this);
-    this.autoCompletion = new AutoCompletion(this);
-    this.autoSuggestions = new AutoSuggestion(this);
-    this.renderer = new Renderer(this, fontSize, theme);
-    this.syntaxHighlighter = new SyntaxHighlighter(this);
-
-    window.x = this;
-  }
-  clear(){
-    //console.log("____FUNC MD CLEAR____")
-   
-      this.lines.splice(0,this.lines.length);
+    this.logic = new Logic();
+    this.input = new Input(keys);
+    this.cursor = new Cursor();
+    this.autocomplete = new Autocomplete();
+    this.intellisense = new Intellisense();
+    this.renderer = new Renderer(fontSize, theme);
+    this.syntaxHighlighter = new SyntaxHighlighter();
+    updateCSSKeysTo(keys); // this adds all keys to :root as --key-[key name]
+    updateCSSThemeTo(theme);// this adds all theme colors to :root as --clr-[key name]
+    this.init();
     
-   
-  
+  }
+  init() {
+    this.logic.init(this);
+    this.input.init(this);
+    this.cursor.init(this);
+    this.autocomplete.init(this);
+    this.intellisense.init(this);
+    this.renderer.init(this);
+    this.syntaxHighlighter.init(this);
+  }
+  clear() {
+    //console.log("____FUNC MD CLEAR____")
+
+    this.lines.splice(0, this.lines.length);
   }
 
   loadMlog(mlog) {
@@ -60,14 +70,15 @@ export class MDEditor {
           line[1] = label;
         }
         removeUnwantedParameters(line);
-        line.forEach((item, index) => {
-          if (index == 0) return;
-          else if (this.logic.isValidVariable(line, index)) this.logic.addVar(item, "variable");
+        line.forEach((word, wordIndex) => {
+          if (wordIndex == 0) return;
+          else if (this.logic.isVariable(line, wordIndex)) this.logic.addVar(word);
+          else if (this.logic.isLabel(line, wordIndex)) this.logic.addLabel(word);
         });
         this.logic.lineNumbers[lineIndex] = lineNumber;
 
-        if (this.logic.isValidLogicLine(line)) {
-          this.validLogicLinePos[this.logic.lineNumbers[lineIndex]] = lineIndex;
+        if (suggestions.validFirstWords.has(line[0])) {
+          this.logic.validLogicLinePos[this.logic.lineNumbers[lineIndex]] = lineIndex;
           lineNumber++;
         }
         this.lines.push(line);

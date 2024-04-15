@@ -1,0 +1,61 @@
+#editor-options {
+  font-size: 0.75em;
+  font-weight: 600;
+  display: flex;
+  flex: 1 1 100%;
+  gap: 1em;
+  padding: 0.5em;
+}
+
+#editor-options button:enabled {
+  padding: 0.25em 0.75em;
+  color: var(--clr-yellow);
+  border: none;
+  border-bottom: 1px solid var(--clr-yellow);
+  background-color: var(--clr-background);
+  cursor: pointer;
+  transition: background 150ms ease-in;
+}
+#editor-options button:disabled {
+  padding: 0.25em 0.75em;
+  border: none;
+  background-color: var(--clr-background);
+  color: var(--clr-comment);
+}
+#editor-options button:hover:enabled {
+  padding: 0.25em 0.75em;
+  color: var(--clr-background);
+  border-bottom: 1px solid var(--clr-background);
+  background-color: var(--clr-yellow);
+}
+
+#e-ac-box {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  background-color: var(--clr-background);
+  border: 1px solid var(--clr-comment);
+  color: var(--clr-comment);
+  cursor: pointer;
+  padding: 0.1em 0px;
+  min-width: 20%;
+  max-height: 16em;
+  overflow-y: auto;
+}
+.e-ac-item {
+  font-family: monospace;
+  padding: 0px 0.25em;
+  letter-spacing: 1px;
+}
+#e-ac-selected {
+  color: var(--clr-foreground);
+  background-color: var(--clr-hightlight);
+}
+#e-ac-selected::after {
+  content: var(--key-autofill);
+  float: right;
+}
+.e-ac-item:hover {
+  color: var(--clr-foreground);
+  background-color: var(--clr-backgroundLight);
+}

@@ -3,7 +3,7 @@ import { MDEditor } from "../../Components/MDEditor/main.js";
 import { getTheme,getKeys } from "../../Components/Global/functions.js";
 import {setupOptions} from "./options.js";
 
-let mdEditor = new MDEditor(18,getTheme(),getKeys());
+let mdEditor = new MDEditor(16,getTheme(),getKeys());
 
 
 let mlog = `
@@ -17,6 +17,8 @@ jump 1 equal res1 res2
 .addlink cell
 printflush cell1
 myLabel1:
+print "ayo mb"
+print "asda
 `
 function loadEditor() {
   

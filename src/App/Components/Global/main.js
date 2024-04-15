@@ -7,14 +7,14 @@ const defaultTheme = {
   red: "#F92672",
   orange: " #FD971F",
   lightOrange: "#E69F66",
-  dullBlue: "#7070FF",
+  blue: "#7070FF",
   yellow: "#E6DB74",
   green: "#A6E22E",
-  blue: "#66D9EF",
-  hightlightColor: "#101812",
+  cyan: "#66D9EF",
+  highlight: "#3E3D32",
   purple: "#AE81FF",
   errorLine: "#f06060",
-  none: "#FFFFFF",
+  none: "#ffffff",
 };
 const defaultKeys = {
   cursorLeft: "ArrowLeft",
@@ -37,6 +37,6 @@ const defaultKeys = {
     gotoBottom: "k",
     zoomIn: "=",
     zoomOut: "-",
-  },
+  }
 };
 export { defaultTheme, defaultKeys};
